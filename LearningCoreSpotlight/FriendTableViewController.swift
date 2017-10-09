@@ -15,6 +15,7 @@ class FriendTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        datasource.savePeopleToIndex()
     }
 
     // MARK: - Table view data source

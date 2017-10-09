@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreSpotlight
 
 class Datasource: NSObject {
     
@@ -50,4 +51,23 @@ class Datasource: NSObject {
         return people.filter({ $0.id == id }).first
     }
 
+    func savePeopleToIndex() {
+        var searchableItems = [CSSearchableItem]()
+        
+        for person in people {
+            let attributeSet = CSSearchableItemAttributeSet(itemContentType: "image" as String)
+            attributeSet.title = person.name
+            attributeSet.contentDescription = "This is an entry all about the interesting person called \(person.name)"
+            attributeSet.thumbnailData = UIImagePNGRepresentation(person.image)
+            
+            let item = CSSearchableItem(uniqueIdentifier: person.id, domainIdentifier: "com.rommelrico.LearningCoreSpotlight.people", attributeSet: attributeSet)
+            searchableItems.append(item)
+        }
+        
+        CSSearchableIndex.default().indexSearchableItems(searchableItems) { (error: Error?) in
+            if let error = error {
+                print(error.localizedDescription)
+            }
+        }
+    }
 }
