@@ -7,12 +7,12 @@
 //
 
 import UIKit
+import CoreSpotlight
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -39,6 +39,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    }
+    
+    // MARK: - CoreSpotlight
+    
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
+        // Find the ID from the User Info
+        let friendID = userActivity.userInfo?["kCSSearchableItemActivityIdentifier"] as! String
+        
+        // Find the root table view controller and make it show the friend with this ID.
+        let navigationController = window?.rootViewController as! UINavigationController
+        navigationController.popToRootViewController(animated: false)
+        let friendTableViewController = navigationController.viewControllers.first as! FriendTableViewController
+        friendTableViewController.showFriend(id: friendID)
+        
+        return true
     }
 
 
